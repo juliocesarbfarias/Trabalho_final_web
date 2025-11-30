@@ -56,7 +56,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"], # <--- MUDANÇA: Aceita qualquer site (Vercel, Localhost, etc)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
