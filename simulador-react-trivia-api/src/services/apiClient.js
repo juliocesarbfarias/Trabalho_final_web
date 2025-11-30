@@ -31,7 +31,7 @@ export async function apiGet(path, { signal, headers } = {}) {
 
 // --- CONFIGURAÇÃO DA NOSSA API (FastAPI) ---
 // O endereço do seu backend Python
-const FASTAPI_BASE_URL = "http://127.0.0.1:8000"; 
+const FASTAPI_BASE_URL = "https://trabalho-final-web.onrender.com"; 
 
 /**
  * Faz uma requisição POST para o nosso backend (Gera simulado).
