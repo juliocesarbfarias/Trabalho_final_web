@@ -68,7 +68,7 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Sessio
     )
     return {"access_token": token, "token_type": "bearer"}
 
-@app.post("/gerar-simulado/{vestibular_id}", response_model=List[schemas.QuestaoResponse])
+@app.post("/gerar-simulado/{vestibular_id}")
 def gerar_simulado(
     vestibular_id: str, 
     request_data: schemas.SimuladoRequest,
