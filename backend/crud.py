@@ -14,6 +14,8 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
+# Recebe os dados, liga ao user_id e salva.
+# ---  CREATE
 def create_simulado(db: Session, user_id: int, vest: str, req: schemas.SimuladoRequest):
     db_simulado = models.SimuladoDB(
         vestibular=vest,
@@ -22,9 +24,9 @@ def create_simulado(db: Session, user_id: int, vest: str, req: schemas.SimuladoR
         num_questoes=req.numQuestoes,
         user_id=user_id
     )
-    db.add(db_simulado)
-    db.commit()
-    db.refresh(db_simulado)
+    db.add(db_simulado) # Adiciona na sessão (memória)
+    db.commit() # Efetiva a gravação no disco
+    db.refresh(db_simulado) # Atualiza com o ID gerado
     return db_simulado
 
 def create_questao(db: Session, simulado_id: int, questao_data: dict, vest: str, req: schemas.SimuladoRequest):
@@ -38,9 +40,12 @@ def create_questao(db: Session, simulado_id: int, questao_data: dict, vest: str,
         resposta_correta_idx=questao_data['respostaCorreta']
     )
     db.add(db_questao)
-    return db_questao # Commit deve ser feito em lote pelo caller
+    return db_questao 
 
+# LISTAR HISTÓRICO
+# READ
 def get_historico_by_user(db: Session, user_id: int):
+    # Faz uma consulta (SELECT) filtrando pelo ID do usuário logado.
     return db.query(models.SimuladoDB)\
         .filter(models.SimuladoDB.user_id == user_id)\
         .order_by(models.SimuladoDB.data_criacao.desc())\

@@ -25,6 +25,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # --- Dependência de Banco de Dados ---
+# Garante que cada requisição tenha sua própria sessão de banco
 def get_db():
     db = SessionLocal()
     try:
@@ -33,12 +34,13 @@ def get_db():
         db.close()
 
 # --- Funções Utilitárias ---
+# Verifica se a senha que o usuário digitou bate com o hash do banco.
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password):
     return pwd_context.hash(password)
-
+# Gera o TOKEN JWT que funciona como o "crachá" do usuário logado.
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:

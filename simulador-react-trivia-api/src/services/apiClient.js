@@ -12,7 +12,7 @@ function buildUrl(path) {
 }
 
 /**
- * [LEGADO] Função para buscar dados da API EXTERNA (Trivia API)
+ *  Função para buscar dados da API EXTERNA (Trivia API)
  * Usada pelo useQuestions.js
  */
 export async function apiGet(path, { signal, headers } = {}) {
@@ -42,6 +42,8 @@ export async function apiPost(path, body, { signal, headers } = {}) {
   console.log("-> POST:", url, body);
   
   // 1. PEGA O TOKEN
+  // AUTENTICAÇÃO NO FRONT
+  // O usuário não vê, mas enviamos o Token em cada pedido.
   const token = localStorage.getItem("authToken");
 
   // 2. CABEÇALHOS

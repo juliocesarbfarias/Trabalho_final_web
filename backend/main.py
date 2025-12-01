@@ -20,7 +20,7 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 if not GEMINI_API_KEY: raise EnvironmentError("GEMINI_API_KEY faltando.")
 genai.configure(api_key=GEMINI_API_KEY)
-
+# Cria as tabelas no banco automaticamente ao iniciar o app
 models.Base.metadata.create_all(bind=engine) # Cria tabelas
 
 app = FastAPI(title="API de Simulados", version="1.0.0")
@@ -67,11 +67,15 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Sessio
         expires_delta=timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     return {"access_token": token, "token_type": "bearer"}
-
+# ENDPOINT : Exige 'current_user' (Login) para funcionar.
+# ROTA PROTEGIDA COM INJEÇÃO DE DEPENDÊNCIA 
+# 'db: Session = Depends(auth.get_db)' injeta a sessão do banco
+# 'current_user' injeta a segurança.
 @app.post("/gerar-simulado/{vestibular_id}")
 def gerar_simulado(
     vestibular_id: str, 
     request_data: schemas.SimuladoRequest,
+    # DEPENDÊNCIA: O FastAPI verifica o token antes de deixar entrar na função.
     current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(auth.get_db) 
 ):
@@ -84,6 +88,7 @@ def gerar_simulado(
         questoes_json = json.loads(limpar_json(response.text))
         
         # Salva usando o módulo CRUD
+        # Chama o CRUD para salvar no banco
         novo_simulado = crud.create_simulado(db, current_user.id, vestibular_id, request_data)
         
         questoes_formatadas = []
