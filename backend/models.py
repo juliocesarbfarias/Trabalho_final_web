@@ -50,4 +50,5 @@ class QuestaoDB(Base):
 
     enunciado = Column(String)
     # salvar as opções como JSON (lista de textos) 
+    opcoes = Column(JSON) 
     resposta_correta_idx = Column(Integer) # Salvado a lista de opções como JSON
